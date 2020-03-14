@@ -12,8 +12,8 @@ const adminKey="GisG"
 
 let isAdmin = (req, res, next) => {
   
-  if (req.body.adminKey && req.body.asminKey!=undefined) {
-  if (req.body.adminKey===adminKey) {
+  if (req.body.adminKey && req.body.adminKey!=undefined) {
+  if (req.body.adminKey==adminKey) {
         req.body.isAdmin=true;
          next()
         

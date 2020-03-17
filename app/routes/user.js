@@ -266,5 +266,35 @@ module.exports.setRouter = (app) => {
                    }
          }
      */
-}
 
+app.post(`${baseUrl}/change/password/:userId`,auth.isAuthorized, userController.changePasswordFunction);
+/**
+* @apiGroup users
+* @apiVersion  1.0.0
+* @api {post} /api/v1/users/signup api to signup a user
+*
+* @apiParam {string} oldPassword firstName of the user. (body params) (required)
+* @apiParam {string} newPassword lastName of the user. (body params) (required)
+* @apiParam {string} email email of the user. (body params) (required)
+
+
+* @apiSuccess {object} myResponse shows error status, message, http status code, result.
+* 
+* @apiSuccessExample {object} Success-Response:
+{
+"error": false,
+"message": "User created",
+"status": 200,
+"data": {
+         "userId": "V4eTMj6o",
+         "firstName": "Nirmala",
+         "lastName": "Mallikarjun",
+         "countryCode": 91,
+         "mobileNumber": 9686464589,
+         "email": "nmy@gmail.com",
+         "isAdmin": true,
+         "createdOn": "2020-03-02T11:44:07.000Z"
+         }
+}
+*/
+}

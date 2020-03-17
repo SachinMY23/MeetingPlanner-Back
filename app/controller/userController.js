@@ -117,7 +117,7 @@ let logInFunction = (req, res) => {
                         /* generate the response and the console error message here */
                         logger.error('No User Found', 'userController: findUser()', 7)
                         let apiResponse = response.generate(true, 'No User Details Not Found', 404, null)
-                        res.send(apiResponse)
+                        reject(apiResponse)
                     } else {
                         /* prepare the message and the api response here */
                         logger.info('User Found', 'userController: findUser()', 10)
@@ -275,6 +275,8 @@ let logOutFunction = (req, res) => {
 let getAllUsers = (req, res) => {
     userModel.find({'isAdmin':false})
         .select(' -__v -_id -password')
+        .limit(15)
+        .skip(parseInt(req.query.skip || 0))
         .lean()
         .exec((err, result) => {
             if (err) {
@@ -327,6 +329,8 @@ let recoverPassword = (req, res) => {
                 let subj=`Recovered Password`
                 password.sendMailFunction(req.body.email,subj, msg);
                 let apiResponse = response.generate(false, 'Password sent to mail successfully', 200, null)
+                console.log(apiResponse)
+
                 res.send(apiResponse)
             }
         })
@@ -433,6 +437,100 @@ let getSingleUser=(req,res)=>{
     })
 }//end of getSingleUser Function
 
+
+
+let changePassword=(req,res)=>
+{
+    let findUser = () => {
+        console.log("findUser");
+        return new Promise((resolve, reject) => {
+            if (req.params.userId) {
+                userModel.findOne({ userId: req.params.userId }, (err, userDetails) => {
+                    /* handle the error here if the User is not found */
+                    if (err) {
+                        console.log(err)
+                        logger.error('Failed To Retrieve User Data', 'userController: findUser()', 10)
+                        /* generate the error message and the api response message here */
+                        let apiResponse = response.generate(true, 'Failed To Find User Details', 500, null)
+                        reject(apiResponse)
+                        /* if Company Details is not found */
+                    } else if (check.isEmpty(userDetails)) {
+                        /* generate the response and the console error message here */
+                        logger.error('No User Found', 'userController: findUser()', 7)
+                        let apiResponse = response.generate(true, 'No User Details Not Found', 404, null)
+                        reject(apiResponse)
+                    } else {
+                        /* prepare the message and the api response here */
+                        logger.info('User Found', 'userController: findUser()', 10)
+                        resolve(userDetails)
+                    }
+                });
+
+            } else {
+                let apiResponse = response.generate(true, 'UserId parameter is missing', 400, null)
+                reject(apiResponse)
+            }
+        })
+    }
+    let validatePassword = (retrievedUserDetails) => {
+        console.log("Validating password")
+        return new Promise((resolve, reject) => {
+            console.log("Current "+req.body.currPassword);
+            passwordLib.comparePassword(req.body.currPassword, retrievedUserDetails.password, (err, isMatch) => {
+                if (err) {
+                    console.log(err)
+                    logger.error(err.message, 'userController: validatePassword()', 10)
+                    let apiResponse = response.generate(true, 'Change Password Failed', 500, null)
+                    reject(apiResponse)
+                } else if (isMatch) {
+                    resolve(retrievedUserDetails)
+                    console.log("Password Matched")
+                } else {
+                    logger.info('Failed Due To Invalid Password', 'userController: validatePassword()', 10)
+                    let apiResponse = response.generate(true, 'Wrong Password.Change Password Failed', 400, null)
+                    reject(apiResponse)
+                }
+            })
+        })
+    }
+    let changePass = (retrievedUserDetails) => {
+        return new Promise((resolve, reject) => {
+            let options={
+                password:passwordLib.hashpassword(req.body.newPassword)
+            }
+            userModel.updateOne({userId:retrievedUserDetails.userId},options,{multi:true},(err,res) => {
+                if (err) {
+                    console.log(err)
+                    logger.error(err.message, 'userController: validatePassword()', 10)
+                    let apiResponse = response.generate(true, 'Change Password Failed', 500, null)
+                    reject(apiResponse)
+                } else  {
+                    resolve(res)
+                    console.log("Password Changed")
+                } 
+            })
+        })
+    }
+    findUser(req, res)
+    .then(validatePassword)
+    .then(changePass)
+    .then((resolve) => {
+        console.log("resolve Object"+resolve);
+        let apiResponse = response.generate(false, 'Password change Successful', 200, resolve)
+        res.status(200)
+        console.log(apiResponse);
+        res.send(apiResponse)
+    })
+    .then((reject)=>{
+        console.log("reject is"+reject)
+    })
+    .catch((err) => {
+        console.log("errorhandler");
+        console.log(err);
+        res.status(err.status)
+        res.send(err)
+    })
+}
 //exporting all the functions
 module.exports = {
     logInFunction: logInFunction,
@@ -443,5 +541,6 @@ module.exports = {
     deleteAllUsersFunction: deleteAllUsers,
     deleteSingleUserFunction: deleteSingleUser,
     editProfileFunction:editProfile,
-    getSingleUserFunction:getSingleUser
+    getSingleUserFunction:getSingleUser,
+    changePasswordFunction:changePassword
 }

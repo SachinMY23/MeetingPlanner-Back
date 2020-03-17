@@ -11,8 +11,8 @@ const check = require('./../libs/checkLib')
 const adminKey="GisG"
 
 let isAdmin = (req, res, next) => {
-  
-  if ( !req.body.adminKey===undefined ) {
+  console.log("is Admin is"+req.body.adminKey)
+  if ( req.body.adminKey!==undefined && req.body.adminKey!=="") {
   if (req.body.adminKey==adminKey) {
         req.body.isAdmin=true;
          next()

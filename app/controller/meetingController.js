@@ -20,7 +20,7 @@ let getAllMeetings = (req, res) => {
         .sort('-createdOn')
         .skip(parseInt(req.query.skip || 0))
         .lean()
-        .limit(5)
+        .limit(15)
         .exec((err, result) => {
             if (err) {
                 console.log(err)

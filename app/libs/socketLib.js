@@ -226,8 +226,8 @@ let setServer = (server) => {
                      ${res[i].meetingTime}is in less than one minute
                      </p>
                      For any queries dial the contact no given below.</p>
-                     <p style="color:orange">admin name:${res.adminName}
-                                             contact no:${res.adminNo}</p>`  
+                     <p style="color:orange">admin name:${res[i].adminName}
+                                             contact no:${res[i].adminNo}</p>`  
 
                      mail.sendMailFunction(email,subj,msg);
                      let data={

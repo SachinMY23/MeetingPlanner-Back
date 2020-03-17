@@ -281,20 +281,15 @@ app.post(`${baseUrl}/change/password/:userId`,auth.isAuthorized, userController.
 * @apiSuccess {object} myResponse shows error status, message, http status code, result.
 * 
 * @apiSuccessExample {object} Success-Response:
-{
-"error": false,
-"message": "User created",
-"status": 200,
-"data": {
-         "userId": "V4eTMj6o",
-         "firstName": "Nirmala",
-         "lastName": "Mallikarjun",
-         "countryCode": 91,
-         "mobileNumber": 9686464589,
-         "email": "nmy@gmail.com",
-         "isAdmin": true,
-         "createdOn": "2020-03-02T11:44:07.000Z"
-         }
+   {
+    "error": false,
+    "message": "User Deleted Successfully",
+    "status": 200,
+    "data": {
+        "n": 1,
+        "ok": 1,
+        "deletedCount": 1
+    }
 }
 */
 }

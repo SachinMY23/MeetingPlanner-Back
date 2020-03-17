@@ -56,7 +56,7 @@ let setServer = (server) => {
             message = `<h1 style="color:red">Hi ${data.fullName}...</h1>
             <p style="color:green">Your Meeting that was on ${data.oldMeetingTime} is scheduled on
             ${data.newMeetingTime}</p>
-            <p style="color:orange">admin name:${data.adminName}
+            <p style="color:orange">admin name:${data.adminName}<br/>
                                     contact no:${data.adminNo}</p>`  
             subj = 'Changes In The Meeting'
 
@@ -95,7 +95,7 @@ let setServer = (server) => {
             <p style="color:green">Your Meeting is scheduled on
             ${data.meetingTime}</p>
             For any queries dial the contact no given below.</p>
-            <p style="color:orange">admin name:${data.adminName}
+            <p style="color:orange">admin name:${data.adminName}<br/>
                                     contact no:${data.adminNo}</p>`  
             let subj = 'Meeting Schedule Notification'
 
@@ -134,7 +134,7 @@ let setServer = (server) => {
             <p style="color:green">Your Meeting that was on ${data.meetingTime} 
             is cancelled.
             For any queries dial the contact no given below.</p>
-            <p style="color:orange">admin name:${data.adminName}
+            <p style="color:orange">admin name:${data.adminName}<br/>
                                     contact no:${data.adminNo}</p>`
             subj = 'Meeting Cancel Notification'
 
@@ -223,10 +223,10 @@ let setServer = (server) => {
                     let email=details[0].email;
                     let msg=`<h1 style="color:red">Hi ${fullName}...</h1>
                      <p style="color:green">Your Meeting that was on
-                     ${res[i].meetingTime}is in less than one minute
+                     ${res[i].meetingTime} is in less than one minute
                      </p>
-                     For any queries dial the contact no given below.</p>
                      <p style="color:orange">admin name:${res[i].adminName}
+                     <br/>
                                              contact no:${res[i].adminNo}</p>`  
 
                      mail.sendMailFunction(email,subj,msg);

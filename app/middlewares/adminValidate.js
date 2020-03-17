@@ -8,29 +8,25 @@ const responseLib = require('./../libs/responseLib')
 const token = require('./../libs/tokenLib')
 const check = require('./../libs/checkLib')
 
-const adminKey="GisG"
+const adminKey = "GisG"
 
 let isAdmin = (req, res, next) => {
-  console.log("is Admin is"+req.body.adminKey)
-  if ( req.body.adminKey && req.body.adminKey!=="") {
-  if (req.body.adminKey==adminKey) {
-        req.body.isAdmin=true;
-         next()
-        
-      } else {
-         logger.error('Invalid Admin Key Is Present', 'AdminValidate Middleware', 10)
-        let apiResponse = responseLib.generate(true, 'Invalid Or Expired Admin Key', 404, null)
-        res.send(apiResponse)
-    } 
-
+  if (req.body.adminKey == "" || req.body.adminKey == undefined) {
+    req.body.isAdmin = false;
+    next()
+  }
+  else if (req.body.adminKey == adminKey) {
+    req.body.isAdmin = true;
+    next()
 
   } else {
-     req.body.isAdmin=false;
-     next();
-    
+    logger.error('Invalid Admin Key Is Present', 'AdminValidate Middleware', 10)
+    let apiResponse = responseLib.generate(true, 'Invalid Or Expired Admin Key', 404, null)
+    res.send(apiResponse)
   }
-}
 
+
+}
 
 module.exports = {
   isAdmin: isAdmin
